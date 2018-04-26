@@ -1,5 +1,4 @@
-# ICPC
-International collegiate programming contest 
+# ICPC 
 acm
-==========
+
 
