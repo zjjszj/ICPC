@@ -1,0 +1,46 @@
+1 余数和商
+打印N/D的值，若结果是无限循环小数，则小数点后面表示成循环节。eg 1/7=0.（142857）
+知识点：
+	有理数：一个整数和一个整数的比，有理数的小数部分是有限或为无限循
+小数。
+	无理数：小数部分为无限不循环小数。
+	余数相同才才是循环节的终点，商不是。
+
+public static void main(String[] args){  
+    	Scanner scan = new Scanner(System.in);  
+        System.out.println("整数范围均为：1~1000(格式: 整数,整数  )");  
+        String s = scan.nextLine();  
+        String[] ss = s.split(",");  
+        int m = Integer.parseInt(ss[0]);  
+        int n = Integer.parseInt(ss[1]);  
+        System.out.println( f(m,n));
+    }
+public static String f(int m,int n){  
+        StringBuffer sb = new StringBuffer();   // 保存结果  
+        List<Integer> lis = new ArrayList<Integer>();   // 记录所有余数  
+        String s = m/n+"."; // 保存整数部分  
+        m = m%n;        // 得到余数  
+        while(m!=0){  
+            if(lis.contains(m)){  
+                int i=0;    // 得到循环节开始的位置 i  
+                for(;i<sb.length();i++){  
+                    if(sb.charAt(i)-'0'==m*10/n){  //char类型数据相加减自动转换为int类型。
+                        break;  
+                    }  
+                }  
+                sb.insert(i,"[");   // 为循环节添加"[  ]"  
+                sb.insert(sb.length(),"]");  
+                break;  
+            }else{  
+                lis.add(m);     // 添加余数	1，3，
+                sb.append(m*10/n);  // 添加商	1，4
+            }  
+            m = m*10%n; // 得到下一个余数  3，2
+        }  
+        return sb.insert(0, s).toString();  
+    }  
+总结：
+	两个整数相除：m/n
+余数为：r1=m%n	商为：s1=r1*10/n	下一个余数为：r2=r*10%n		下一个商为：s2=r2*10/n
+	char类型的相加减会自动转换为int类型。
+	基本类型比较相等时，==判断的是值。
