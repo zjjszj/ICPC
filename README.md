@@ -1,3 +1,3 @@
-# ICPC & OJ
+# ICPC and OJ
 `acm`
 
