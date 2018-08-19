@@ -1,4 +1,3 @@
 # ICPC & OJ
 `acm`
-dddddddddddd
 
