@@ -1,0 +1,123 @@
+1 三个数之和(python)
+Given an array nums of n integers, are there elements a, b, c in nums such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
+Note:
+The solution set must not contain duplicate triplets.
+Example:
+Given array nums = [-1, 0, 1, 2, -1, -4],
+A solution set is:
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+方法一 760ms
+def threeSum(self,nums):
+        #排序
+        nums.sort()
+        result=[]
+        for i in range(len(nums)-2):
+            if i==0 or nums[i]>nums[i-1]:
+                left=i+1;right=len(nums)-1
+                while left<right:
+					//降低运行时间
+                    s=nums[left]+nums[right]+nums[i]
+                    if(s==0): 
+                        result.append([nums[i],nums[left],nums[right]])
+                        left+=1;right-=1
+                        while left<right and nums[left] == nums[left-1]: left +=1   #去重
+                        while left<right and nums[right] == nums[right+1]: right -= 1 
+                    elif(s<0):
+                        left+=1
+                    else:
+                        right-=1
+		return result
+	降低运行时间的方法：
+1 将需要计算的数保存到一个变量中，当用到该数时就不需要重新计算。
+2 最接近的三数之和(python)
+def threeSumClosest(self, nums, target):
+        """
+       1 固定一个数，用头和尾指针指向另外两个数，判断三数之和与target的关系。
+       2 若相等则返回和数，若小于target则头指针向右移，若大于target则尾指针向左移。
+       3 指针移动的结束条件是left<right
+        """
+     #排序
+        nums.sort()
+		#最接近且大于target的数、最接近且小于target的数
+        res_max=84455555;res_min=-84455555
+        for index in range(len(nums)-2):
+            if index==0 or nums[index]>nums[index-1]:
+                left,right= index+1,len(nums)-1
+                ##结束条件
+                while left<right:
+                    sum_=nums[index]+nums[left]+nums[right]
+                    ##判断总和是否与target相等
+                    if left<right and sum_==target: return target
+                    ##总和小于目标值
+                    while left<right and sum_<target:
+                        ##更新res_min的值
+                        if sum_>res_min and left<right: 
+                            res_min =sum_
+                        ##右移
+                        left+=1
+                        ##更新sum_
+                        sum_=nums[index]+nums[left]+nums[right]
+                    while left<right and sum_>target:
+                        if sum_<res_max and left<right: 
+                            res_max=sum_
+                        right-=1
+                        sum_=nums[index]+nums[left]+nums[right]
+        ##判断哪个离目标值近
+        if (res_max-target)<(target-res_min): return res_max
+        else: return res_min
+3 四数之和(c++)
+
+
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> result;
+        int sum_=0;
+        //判断数据的正确性
+        if(nums.size()<4) return result;
+        //排序
+        sort(nums.begin(),nums.end());
+        vector<int> temp(4);
+        //固定第一个位置
+        for(int i=0;i<nums.size()-3;i++){
+            //去重
+            if(i>0 && nums[i]==nums[i-1]) continue;
+                //固定第二个位置
+                for(int j=i+1;j<nums.size()-2;j++){
+                        //去重
+                        if(j>i+1&&nums[j]==nums[j-1]) continue;
+                        //循环后两个位置
+                        int left=j+1;int right=nums.size()-1;
+                        while(left<right){
+                            sum_=nums[i]+nums[j]+nums[left]+nums[right];
+                            if(sum_==target){
+                                temp[0]=nums[i];
+                                temp[1]=nums[j];
+                                temp[2]=nums[left];
+                                temp[3]=nums[right];
+                                result.push_back(temp);
+                                left++;
+                                right--;
+                                //去重
+                                while(left<right&&nums[left]==nums[left-1]) left++;
+                                while(left<right&&nums[right]==nums[right+1]) right--;
+                            }
+                            else if(sum_<target&&left<right){
+                                left++;
+                            }
+                            else if(sum_>target&&left<right){
+                                right--;
+                            }else{
+                                cout<<"............error.............."<<endl;
+                            }
+                    
+                        }
+                }
+        }
+        return result;
+    }
+};

@@ -1,0 +1,131 @@
+dfs:按照某一顺序遍历，当走不通时，返回到上一个继续按照该顺序走。
+1 凑算式(dfs)
+ 
+A-I代表1-9，不同字母代表不同数字，求一共有多少种解法？
+
+法一(不好理解)：
+public class javaTest {
+	private static int ans = 0;  
+	static int []num=new int[10];
+	static boolean[]visit=new boolean[10];
+	public static void dfs(int index){
+		if(index == 9)  
+	    {  
+	        Solve();  
+	        return ;  
+	    }  
+	    for(int i = 1 ; i < 10 ; i ++)  
+	    {  
+	        if(!visit[i])  
+	        {  
+	            visit[i] = true;  
+	            num[index] = i;  
+	            dfs(index+1);  
+	            visit[i] = false;  
+	        }  
+	    }  
+	}
+	public static void Solve()  
+	{  
+	    double sum = num[0] + (double)num[1] / num[2] + (double)(num[3]*100+num[4]*10+num[5])/(num[6]*100+num[7]*10+num[8]);  
+	    if(sum == 10)  
+	    {  
+	        ans ++;  
+	    }  
+	}  
+	public static void main(String[] args) {
+		 dfs(0);  
+		 System.out.println(ans);
+	}
+}
+法二(好理解)：
+public class javaTest {
+	static int []a=new int[9];
+	static int ans=0;
+	static boolean judge(int []a)//判断是否算式和为10
+	{
+	    double x=a[0]+a[1]*1.0/a[2]+(a[3]*100+a[4]*10+a[5])*1.0/(a[6]*100+a[7]*10+a[8]);
+	    if(x==10.0) return true;
+	    return false;
+	}
+	static boolean check(int num)//检测a[num]是否有重复
+	{
+	    for(int i=num-1;i>=0;i--)
+	    {
+	        if(a[i]==a[num]) return false;
+	    }
+	    return true;	//没有重复
+	}
+	static void dfs(int num)//就是最基本的9个数全排列，在结束条件里用judge()做判断
+	{
+	    if(num>8)
+	    {
+	        if(judge(a))
+	        ans++;
+	        return;
+	    }
+	    for(int i=1;i<10;i++)
+	    {
+	        a[num]=i;
+	        if(check(num))//没有重复
+	        {
+	            dfs(num+1);
+	        }
+	    }
+	}
+	public static void main(String[] args) {
+		dfs(0);
+		System.out.println(ans);
+	}
+}
+2 lake counting
+有一个大小为N*M的园子，雨后积水。八连通的积水被认为是连接在一起的。请求出园子里总共有多少水洼？
+public static void main( String[] args )
+    {
+    	//输入
+    	Scanner scanner=new Scanner(System.in);
+    	int n=scanner.nextInt();
+    	int m=scanner.nextInt();
+    	char[][] adj=new char[n][m];
+    	for(int i=0;i<n;i++){
+    		adj[i]=scanner.next().toCharArray();
+    	}
+    	//处理
+    	int count=deal(adj);
+    	//输出
+    	System.out.println(count);
+    }
+	private static int deal(char[][] adj) {
+		int count=0;
+		int n=adj.length;
+		int m=adj[0].length;
+		//对值为W的点进行dfs
+		for(int i=0;i<n;i++){
+			for(int j=0;j<m;j++){
+				if(adj[i][j]=='W'){
+					dfs(adj,i,j);
+					//记录dfs的次数即为所求
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	private static void dfs(char[][] adj, int i, int j) {
+		int n = adj.length;
+		int m = adj[0].length;
+		// 标注为访问
+		adj[i][j] = '*';
+		//深度遍历8个方向,方向为左上、上、右上、左、右、左下、下、右下
+		for(int a=-1;a<=1;a++){
+			for (int b=-1;b<=1;b++){
+				int newX=i+a;
+				int newY=j+b;
+				//判断新坐标是否满足条件
+	if(newX>=0&&newX<n&&newY>=0&&newY<m&&adj[newX][newY]=='W')
+				dfs(adj,newX,newY);
+			}
+		}
+		//8个方向扫描完毕
+		return;
+	}

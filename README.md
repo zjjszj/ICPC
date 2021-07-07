@@ -1,5 +1,3 @@
-# ICPC
-International collegiate programming contest 
-acm
-==========
-==
+# ICPC and OJ
+`acm`
+

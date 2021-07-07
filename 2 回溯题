@@ -1,0 +1,96 @@
+回溯法：加了条件的dfs。比如四色问题中限制给a节点必须上b颜色。
+1地图四色问题
+注意：
+	只要某一区域的颜色发生改变，那么与它前边所有的区域都要进行比较
+方法一
+//0表示未着色，1，2，3，4分别表示4种颜色，区域用节点表示，地图用邻接矩阵表示，相邻用1表示，不相邻用0表示。
+public static void main(String[] args){  
+		//测试数据
+    	int [][]adj=new int [][]{
+     		{0,1,0,0,0,0,1},  
+    	    {1,0,1,1,1,1,1},  
+    	    {0,1,0,1,0,0,0},  
+    	    {0,1,1,0,1,0,0},  
+    	    {0,1,0,1,0,1,1},  
+    	    {0,1,0,0,1,0,1},  
+    	    {1,1,0,0,1,1,0}  
+    	};
+    	int []color=new int[adj.length];
+    	//初始化color数组，0表示未着色
+    	for(int i=0;i<adj.length;i++){
+    		color[i]=0;
+    	}
+    	Integer i=0;//用Integer是引用传递
+    	while(i<adj.length){
+			//着色方法
+    		test(i,adj,color);
+    		i++;
+    	}
+		//输出着色方案
+    	for(int j=0;j<color.length;j++){
+    		System.out.println(color[j]);
+    	}
+    }
+public static void test(Integer i, int[][] adj, int[] color){
+    	color[i]++;
+    	if(color[i]==5){
+		//回溯(该节点的候选值都不符合则返回上一个节点)
+    		i=i-1;
+			test(i,adj,color);
+    	}else{    		
+			for(int j=0;j<i;j++){
+			//如果区域相邻并且颜色相同，那么颜色需要改变
+    			if(adj[i][j]==1&&color[i]==color[j]){
+    				test(i,adj,color);
+    			}
+    		}
+    	}
+
+方法二：限制上色方法：给a节点上b颜色
+public static void main(String[] args){  
+		//测试数据
+    	int [][]adj=new int [][]{
+     		{0,1,0,0,0,0,1},  
+    	    {1,0,1,1,1,1,1},  
+    	    {0,1,0,1,0,0,0},  
+    	    {0,1,1,0,1,0,0},  
+    	    {0,1,0,1,0,1,1},  
+    	    {0,1,0,0,1,0,1},  
+    	    {1,1,0,0,1,1,0}  
+    	};
+    	int []color=new int[adj.length];
+    	//初始化color数组，0表示未着色
+    	for(int i=0;i<adj.length;i++){
+    		color[i]=0;
+    	}
+		getColor(adj,1,1,1,color,4);
+    	for(int j=0;j<color.length;j++){
+    		System.out.println(color[j]);
+    	}
+    }
+//判断该step节点着色是否符合规则
+    static boolean isOk(int[][]adj,int step,int []color){
+    	for(int i=1;i<=adj.length;i++){
+    		if(adj[step-1][i-1]==1&&color[step-1]==color[i-1]){
+    			return false;
+    		}
+    	}
+    	return true;
+    }
+    static boolean getColor(int [][]adj,int step,int a,int b,int []color,int colorNum){
+		//判断是否完成上色
+    	if(step>adj.length){
+    		//判断是否是a节点上b颜色
+    		if(color[a-1]==b) return true;
+    	}else{
+    		for(int i=1;i<=colorNum;i++){
+    			color[step-1]=i;
+    			if(isOk(adj,step,color)){
+    				if(getColor(adj,step+1,a,b,color,colorNum)) return true;	//回溯法
+    			}else{
+    				color[step-1]=0;
+    			}
+    		}
+    	}
+    	return false;
+    }
